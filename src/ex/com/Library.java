@@ -1,45 +1,48 @@
 package ex.com;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class Library {
-    private final List<Book> books = new ArrayList<>();
-    private final Set<String> categories = new TreeSet<>();
-    private final Map<String, Book> isbnIndex = new HashMap<>();
-    private final Map<Book, String> loans = new HashMap<>();
+    private List<Book> books = new ArrayList<>();
+    private Set<String> categories = new HashSet<>();
+    private Map<String, Book> isbnIndex = new HashMap<>();
+    private Map<Book, String> loans = new HashMap<>();
 
-    public boolean addBook(Book b1) {
-        if (isbnIndex.containsKey(((Book) b1).getIsbn())) return false;
-        books.add(b1);
-        isbnIndex.put(b1.getIsbn(), b1);
-        return true;
+    public void addBook(Book book) {
+        books.add(book);
     }
 
-    public void addCategory(String category) { categories.add(category); }
-
-    public Book findByIsbn(String isbn) { return isbnIndex.get(isbn); }
-
-    public boolean borrowBook(java.awt.print.Book b1, String borrower) {
-        if (!isbnIndex.containsKey(((Book) b1).getIsbn()) || loans.containsKey(b1)) return false;
-        loans.put(b1, borrower);
-        return true;
+    public void addCategory(String category) {
+        categories.add(category);
     }
 
-    public boolean returnBook(java.awt.print.Book b1) { return loans.remove(b1) != null; }
+    public List<Book> getBooks() { return books; }
 
-    public String borrowerOf(Book book) { return loans.get(book); }
+    // Indexation rapide par ISBN
+    public void addBookIndexed(Book book) {
+        books.add(book);
+        isbnIndex.put(book.getIsbn(), book);
+    }
 
-    public List<Book> getBooks() { return Collections.unmodifiableList(books); }
-    public Set<String> getCategories() { return Collections.unmodifiableSet(categories); }
+    public Book findByIsbn(String isbn) {
+        return isbnIndex.get(isbn);
+    }
 
-	public void addBook(java.awt.print.Book b1) {
-		// TODO Auto-generated method stub
-		
-	}
+    // Prêts
+    public boolean borrowBook(Book book, String borrower) {
+        if (!loans.containsKey(book)) {
+            loans.put(book, borrower);
+            return true;
+        }
+        return false;
+    }
+
+    // Restitution
+    public void returnBook(Book book) {
+        loans.remove(book);
+    }
 }

@@ -1,20 +1,17 @@
 package ex.com;
-
-import java.awt.print.Book;
-
 public class Main {
     public static void main(String[] args) {
         Library lib = new Library();
-        Book b1 = new Book();
-        lib.addBook(b1);
-        lib.addCategory("Informatique");
-        lib.addCategory("Informatique"); // ignoré : Set
+        Book b1 = new Book("978-2123456803", "Java Avancé", "Auteur A");
+        lib.addBookIndexed(b1);
 
-        System.out.println("Trouvé : " + lib.findByIsbn("978-2123456803"));
-        System.out.println("Emprunt Alice : " + lib.borrowBook(b1, "Alice"));   // true
-        System.out.println("Emprunt Bob   : " + lib.borrowBook(b1, "Bob"));     // false
-        System.out.println("Restitution   : " + lib.returnBook(b1));            // true
-        System.out.println("Emprunt Bob   : " + lib.borrowBook(b1, "Bob"));     // true
-        System.out.println("Catégories    : " + lib.getCategories());
+        lib.borrowBook(b1, "Alice");
+        System.out.println("Livre trouvé par ISBN : " + lib.findByIsbn("978-2123456803"));
+
+        // Cycle complet de prêt
+        System.out.println("Alice emprunte : " + lib.borrowBook(b1, "Alice"));   // false (déjà emprunté)
+        System.out.println("Bob emprunte : " + lib.borrowBook(b1, "Bob"));       // false (déjà emprunté)
+        lib.returnBook(b1);
+        System.out.println("Bob emprunte après retour : " + lib.borrowBook(b1, "Bob")); // true
     }
 }
